@@ -78,6 +78,7 @@
 		DE82C97C2B78CE8B009BE530 = {
 			isa = PBXGroup;
 			children = (
+				DE82C9B92B797271009BE530 /* screenshots */,
 				DE82C9872B78CE8B009BE530 /* Weather App */,
 				DE82C99A2B78CE8D009BE530 /* Weather AppTests */,
 				DE82C9A42B78CE8D009BE530 /* Weather AppUITests */,
@@ -139,6 +140,13 @@
 				DE82C9B72B79519B009BE530 /* WeatherData.swift */,
 			);
 			path = model;
+			sourceTree = "<group>";
+		};
+		DE82C9B92B797271009BE530 /* screenshots */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = screenshots;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
