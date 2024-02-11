@@ -9,53 +9,106 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
-
+    @State private var isNight:Bool = false
     var body: some View {
-        NavigationSplitView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
-                    }
+        ZStack{
+            BackgroundView(isNight: $isNight)
+            VStack{
+                Text("Bengaluru, IN")
+                    .font(.system(size: 32,weight: .medium))
+                    .bold()
+                    .foregroundColor(.white)
+                    .padding()
+                VStack(spacing:10){
+                    Image(systemName: isNight ? "moon.stars.fill" : "cloud.sun.fill")
+                        .symbolRenderingMode(.multicolor)
+                        .resizable()
+                        .contentTransition(.symbolEffect(.replace))
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 156,height: 156)
+                    Text("24°")
+                        .font(.system(size: 72, weight: .medium))
+                        .foregroundColor(.white)
+                }.padding(.bottom, 34)
+                HStack(spacing: 24){
+                    WeatherDayView(
+                        dayOfWeek:"TUE",
+                        weatherIcon: "cloud.bolt.rain.fill",
+                        temprature: 22)
+                    WeatherDayView(
+                        dayOfWeek:"WED",
+                        weatherIcon: "sun.rain.fill",
+                        temprature: 25)
+                    WeatherDayView(
+                        dayOfWeek:"THU",
+                        weatherIcon: "sunset.fill",
+                        temprature: 20)
+                    WeatherDayView(
+                        dayOfWeek:"FRI",
+                        weatherIcon: "cloud.sun.bolt.fill",
+                        temprature: 21)
+                    WeatherDayView(
+                        dayOfWeek:"SAT",
+                        weatherIcon: "wind",
+                        temprature: 22)
                 }
-                .onDelete(perform: deleteItems)
+                Spacer()
+                Button{
+                    isNight.toggle()
+                }label: {
+                    Text("Change Day Time")
+                        .frame(width: 256, height: 56)
+                        .font(.system(
+                            size: 20,
+                            weight: .bold,
+                            design: .default))
+                        .background(.orange.gradient)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                }
+                Spacer()
             }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
-                }
-            }
-        } detail: {
-            Text("Select an item")
         }
     }
 
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
-        }
-    }
 
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(items[index])
-            }
-        }
-    }
 }
 
 #Preview {
     ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
+}
+
+struct WeatherDayView: View {
+var dayOfWeek:String
+var weatherIcon:String
+var temprature:Int
+    
+    var body: some View {
+        VStack(spacing: 8){
+            Text(dayOfWeek)
+                .font(.system(size: 16, weight: .medium))
+                .foregroundColor(.white)
+            Image(systemName: weatherIcon)
+                .symbolRenderingMode(.palette)
+                .resizable()
+                .foregroundStyle(.white, .yellow, .blue)
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 48,height: 48)
+            Text("\(temprature)°")
+                .font(.system(size: 18, weight: .medium))
+                .foregroundColor(.white)
+        }
+    }
+}
+
+struct BackgroundView: View {
+    @Binding var isNight:Bool
+    var body: some View {
+        LinearGradient(
+            colors: [isNight ? .black : .blue, isNight ? .gray :Color("lightBlue")],
+            startPoint:.topLeading,
+            endPoint: .bottomTrailing
+        ).ignoresSafeArea()
+        .contentTransition(.symbolEffect(.replace))
+    }
 }
