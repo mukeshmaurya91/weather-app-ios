@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
+    @State var count: Int = 0
     @State private var isNight:Bool = false
     @StateObject var viewModel = WeatherViewModel()
     var body: some View {
@@ -18,10 +19,9 @@ struct ContentView: View {
                 Image(systemName: "rainbow")
                     .symbolRenderingMode(.multicolor)
                     .resizable()
-                    .symbolEffect(.pulse, options: .repeating, value: 2000)
+                    .symbolEffect(.variableColor.iterative.hideInactiveLayers.nonReversing)
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 128, height: 128)
-                    .padding(.all)
             } else{
                 VStack{
                     Text("\(viewModel.cityName), IN")
